@@ -1,0 +1,19 @@
+<div class="p-6 max-w-xl mx-auto text-center">
+  <h1 class="text-2xl font-bold mb-4">🧬 BioQuizAI</h1>
+
+  <p class="mb-4">{{ question }}</p>
+
+  <div class="flex flex-col gap-2">
+    <button
+      *ngFor="let option of options"
+      (click)="selectAnswer(option)"
+      class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+    >
+      {{ option }}
+    </button>
+  </div>
+
+  <p class="mt-4 text-lg font-semibold">
+    {{ result }}
+  </p>
+</div>
