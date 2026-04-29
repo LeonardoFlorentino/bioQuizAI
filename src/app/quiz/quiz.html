@@ -1,19 +1,46 @@
-<div class="p-6 max-w-xl mx-auto text-center">
+<div class="p-6 max-w-xl mx-auto text-center bg-gray-800 rounded-lg shadow-lg mt-8">
   <h1 class="text-2xl font-bold mb-4">🧬 BioQuizAI</h1>
 
-  <p class="mb-4">{{ question }}</p>
+  @if (!finished) {
+    <div>
+      <p class="mb-2 text-sm text-gray-400">
+        Pergunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}
+      </p>
 
-  <div class="flex flex-col gap-2">
-    <button
-      *ngFor="let option of options"
-      (click)="selectAnswer(option)"
-      class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-    >
-      {{ option }}
-    </button>
-  </div>
+      <p class="mb-4 text-lg">
+        {{ currentQuestion.question }}
+      </p>
+
+      <div class="flex flex-col gap-2">
+        @for (option of currentQuestion.options; track option) {
+          <button
+            (click)="selectAnswer(option)"
+            class="bg-blue-600 p-2 rounded hover:bg-blue-700 disabled:bg-gray-500"
+          >
+            {{ option }}
+          </button>
+        }
+      </div>
+    </div>
+  }
 
   <p class="mt-4 text-lg font-semibold">
     {{ result }}
   </p>
+
+  <button
+    *ngIf="showNext"
+    (click)="nextQuestion()"
+    class="mt-4 bg-green-600 p-2 rounded hover:bg-green-700"
+  >
+    Próxima pergunta
+  </button>
+
+  <div *ngIf="finished">
+    <h2 class="text-xl mb-4">🎉 Quiz finalizado!</h2>
+
+    <p class="mb-4">Você acertou {{ score }} de {{ questions.length }}</p>
+
+    <button (click)="restart()" class="bg-blue-600 p-2 rounded hover:bg-blue-700">Reiniciar</button>
+  </div>
 </div>

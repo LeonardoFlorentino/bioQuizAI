@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-quiz',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './quiz.html',
-  styleUrl: './quiz.css',
+  styleUrls: ['./quiz.css'],
 })
 export class Quiz {
   questions = [

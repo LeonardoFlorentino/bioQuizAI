@@ -7,7 +7,7 @@ import { Quiz } from './quiz/quiz';
   standalone: true,
   imports: [RouterOutlet, Quiz],
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  styleUrls: ['./app.css'],
 })
 export class App {
   protected readonly title = signal('bioQuizAI');
