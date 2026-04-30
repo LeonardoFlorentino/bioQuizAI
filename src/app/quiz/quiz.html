@@ -15,7 +15,14 @@
         @for (option of currentQuestion.options; track option) {
           <button
             (click)="selectAnswer(option)"
-            class="bg-blue-600 p-2 rounded hover:bg-blue-700 disabled:bg-gray-500"
+            [disabled]="selectedAnswer !== null"
+            [ngClass]="{
+              'bg-green-600': selectedAnswer === option && option === currentQuestion.correctAnswer,
+              'bg-red-600': selectedAnswer === option && option !== currentQuestion.correctAnswer,
+              'bg-gray-700': selectedAnswer && option === currentQuestion.correctAnswer,
+              'bg-blue-600': !selectedAnswer,
+            }"
+            class="p-2 rounded text-white transition"
           >
             {{ option }}
           </button>
