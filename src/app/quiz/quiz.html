@@ -2,6 +2,10 @@
   <h1 class="text-2xl font-bold mb-4">🧬 BioQuizAI</h1>
 
   @if (!finished) {
+    <p class="text-sm text-yellow-400 mb-2">⏱️ Tempo restante: {{ timeLeft }}s</p>
+  }
+
+  @if (!finished && !showNext) {
     <div>
       <p class="mb-2 text-sm text-gray-400">
         Pergunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}
@@ -31,23 +35,19 @@
     </div>
   }
 
-  <p class="mt-4 text-lg font-semibold">
-    {{ result }}
-  </p>
+  @if (showNext && !finished) {
+    <p class="mt-4 text-lg font-semibold">
+      {{ result }}
+    </p>
+    <button (click)="nextQuestion()" class="mt-4 bg-green-600 p-2 rounded hover:bg-green-700">
+      Próxima pergunta
+    </button>
+  }
 
-  <button
-    *ngIf="showNext"
-    (click)="nextQuestion()"
-    class="mt-4 bg-green-600 p-2 rounded hover:bg-green-700"
-  >
-    Próxima pergunta
-  </button>
-
-  <div *ngIf="finished">
+  @if (finished) {
     <h2 class="text-xl mb-4">🎉 Quiz finalizado!</h2>
-
+    <p class="mb-4 text-lg font-semibold">{{ result }}</p>
     <p class="mb-4">Você acertou {{ score }} de {{ questions.length }}</p>
-
     <button (click)="restart()" class="bg-blue-600 p-2 rounded hover:bg-blue-700">Reiniciar</button>
-  </div>
+  }
 </div>
