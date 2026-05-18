@@ -1,17 +1,38 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# ==============================================================================
+# BACKEND (Java / Maven)
+# ==============================================================================
+**/target/
+**/*.class
+.mvn/wrapper/maven-wrapper.jar
 
-# Node
-/node_modules
+# ==============================================================================
+# FRONTEND (Angular / Node)
+# ==============================================================================
+# Ao remover a '/' do início, o Git ignora essas pastas em qualquer nível do projeto
+.angular/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+node_modules/
+.angular/cache/
+.sass-cache/
+connect.lock/
+coverage/
+__screenshots__/
+typings/
+
+# Logs do Node (valem para qualquer pasta)
 npm-debug.log
 yarn-error.log
+/libpeerconnection.log
+testem.log
 
-# IDEs and editors
+# ==============================================================================
+# FERRAMENTAS & IDEs (Globais para o projeto)
+# ==============================================================================
 .idea/
 .project
 .classpath
@@ -28,16 +49,6 @@ yarn-error.log
 !.vscode/extensions.json
 !.vscode/mcp.json
 .history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
 
 # System files
 .DS_Store
