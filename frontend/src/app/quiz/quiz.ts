@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OnInit } from '@angular/core';
+import { OnInit, Component } from '@angular/core';
+import { QuizService } from '../services/quiz.service';
+import { Question } from '../models/question.model';
 
 @Component({
   selector: 'app-quiz',
@@ -10,24 +11,9 @@ import { OnInit } from '@angular/core';
   styleUrls: ['./quiz.css'],
 })
 export class Quiz implements OnInit {
-  questions = [
-    {
-      question: 'Qual é a organela responsável pela respiração celular?',
-      options: ['Mitocôndria', 'Núcleo', 'Ribossomo', 'Lisossomo'],
-      correctAnswer: 'Mitocôndria',
-    },
-    {
-      question: 'Qual molécula carrega a informação genética?',
-      options: ['RNA', 'Proteína', 'DNA', 'Lípidio'],
-      correctAnswer: 'DNA',
-    },
-    {
-      question: 'Qual processo as plantas usam para produzir energia?',
-      options: ['Respiração', 'Fermentação', 'Fotossíntese', 'Digestão'],
-      correctAnswer: 'Fotossíntese',
-    },
-  ];
+  constructor(private quizService: QuizService) {}
 
+  questions: Question[] = [];
   currentQuestionIndex = 0;
   score = 0;
   selectedAnswer: string | null = null;
@@ -38,7 +24,12 @@ export class Quiz implements OnInit {
   timer: ReturnType<typeof setInterval> | undefined;
 
   ngOnInit(): void {
-    this.startTimer();
+    this.quizService.getQuestions().subscribe((data: any) => {
+      this.questions = [
+        { question: data.question, options: data.options, correctAnswer: data.correctAnswer },
+      ];
+      this.startTimer();
+    });
   }
 
   get currentQuestion() {
