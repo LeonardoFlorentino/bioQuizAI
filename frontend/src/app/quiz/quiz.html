@@ -10,28 +10,30 @@
       <p class="mb-2 text-sm text-gray-400">
         Pergunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}
       </p>
+      @if (currentQuestion) {
+        <p class="mb-4 text-lg">
+          {{ currentQuestion.question }}
+        </p>
 
-      <p class="mb-4 text-lg">
-        {{ currentQuestion.question }}
-      </p>
-
-      <div class="flex flex-col gap-2">
-        @for (option of currentQuestion.options; track option) {
-          <button
-            (click)="selectAnswer(option)"
-            [disabled]="selectedAnswer !== null"
-            [ngClass]="{
-              'bg-green-600': selectedAnswer === option && option === currentQuestion.correctAnswer,
-              'bg-red-600': selectedAnswer === option && option !== currentQuestion.correctAnswer,
-              'bg-gray-700': selectedAnswer && option === currentQuestion.correctAnswer,
-              'bg-blue-600': !selectedAnswer,
-            }"
-            class="p-2 rounded text-white transition"
-          >
-            {{ option }}
-          </button>
-        }
-      </div>
+        <div class="flex flex-col gap-2">
+          @for (option of currentQuestion.options; track option) {
+            <button
+              (click)="selectAnswer(option)"
+              [disabled]="selectedAnswer !== null"
+              [ngClass]="{
+                'bg-green-600':
+                  selectedAnswer === option && option === currentQuestion.correctAnswer,
+                'bg-red-600': selectedAnswer === option && option !== currentQuestion.correctAnswer,
+                'bg-gray-700': selectedAnswer && option === currentQuestion.correctAnswer,
+                'bg-blue-600': !selectedAnswer,
+              }"
+              class="p-2 rounded text-white transition"
+            >
+              {{ option }}
+            </button>
+          }
+        </div>
+      }
     </div>
   }
 
