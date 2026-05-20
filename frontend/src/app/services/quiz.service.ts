@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -26,5 +27,9 @@ export class QuizService {
       url += `?${params.join('&')}`;
     }
     return this.http.get(url);
+  }
+
+  getQuestionsAI(category: string, difficulty: string): Observable<any> {
+    return this.http.get<any>(`/questions/generate?category=${category}&difficulty=${difficulty}`);
   }
 }

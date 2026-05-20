@@ -6,6 +6,7 @@
 **/target/
 **/*.class
 .mvn/wrapper/maven-wrapper.jar
+application.properties
 
 # ==============================================================================
 # FRONTEND (Angular / Node)

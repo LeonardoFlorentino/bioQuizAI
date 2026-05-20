@@ -85,7 +85,7 @@ export class Quiz implements OnInit {
 
   loadQuestions() {
     this.quizService
-      .getQuestions(this.selectedCategory, this.selectedDifficulty)
+      .getQuestionsAI(this.selectedCategory, this.selectedDifficulty)
       .subscribe((data: any) => {
         clearInterval(this.timer);
         this.questions = data;
