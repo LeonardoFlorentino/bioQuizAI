@@ -1,37 +1,66 @@
 <div class="p-6 max-w-xl mx-auto text-center bg-gray-800 rounded-lg shadow-lg mt-8">
   <h1 class="text-2xl font-bold mb-4">🧬 BioQuizAI</h1>
 
-  @if (!finished) {
+  <div class="flex flex-col gap-3 mb-6">
+    <select [(ngModel)]="selectedCategory" class="p-2 rounded bg-gray-700 text-white">
+      <option value="">Todas Categorias</option>
+      <option value="Citologia">Citologia</option>
+      <option value="Genética">Genética</option>
+      <option value="Bioquímica">Bioquímica</option>
+    </select>
+
+    <select [(ngModel)]="selectedDifficulty" class="p-2 rounded bg-gray-700 text-white">
+      <option value="">Todas Dificuldades</option>
+      <option value="Fácil">Fácil</option>
+      <option value="Médio">Média</option>
+      <option value="Difícil">Difícil</option>
+    </select>
+
+    <button
+      (click)="loadQuestions()"
+      class="bg-purple-600 hover:bg-purple-700 p-2 rounded text-white font-semibold transition"
+    >
+      Iniciar Quiz
+    </button>
+  </div>
+
+  @if (noQuestionsFound) {
+    <p class="text-red-400 mt-4">Nenhuma pergunta encontrada para o filtro selecionado.</p>
+  }
+
+  @if (!finished && !noQuestionsFound) {
     <p class="text-sm text-yellow-400 mb-2">⏱️ Tempo restante: {{ timeLeft }}s</p>
   }
 
-  @if (!finished && !showNext) {
+  @if (!finished && !showNext && currentQuestion) {
     <div>
       <p class="mb-2 text-sm text-gray-400">
         Pergunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}
       </p>
+      @if (currentQuestion) {
+        <p class="mb-4 text-lg">
+          {{ currentQuestion.question }}
+        </p>
 
-      <p class="mb-4 text-lg">
-        {{ currentQuestion.question }}
-      </p>
-
-      <div class="flex flex-col gap-2">
-        @for (option of currentQuestion.options; track option) {
-          <button
-            (click)="selectAnswer(option)"
-            [disabled]="selectedAnswer !== null"
-            [ngClass]="{
-              'bg-green-600': selectedAnswer === option && option === currentQuestion.correctAnswer,
-              'bg-red-600': selectedAnswer === option && option !== currentQuestion.correctAnswer,
-              'bg-gray-700': selectedAnswer && option === currentQuestion.correctAnswer,
-              'bg-blue-600': !selectedAnswer,
-            }"
-            class="p-2 rounded text-white transition"
-          >
-            {{ option }}
-          </button>
-        }
-      </div>
+        <div class="flex flex-col gap-2">
+          @for (option of currentQuestion.options; track option) {
+            <button
+              (click)="selectAnswer(option)"
+              [disabled]="selectedAnswer !== null"
+              [ngClass]="{
+                'bg-green-600':
+                  selectedAnswer === option && option === currentQuestion.correctAnswer,
+                'bg-red-600': selectedAnswer === option && option !== currentQuestion.correctAnswer,
+                'bg-gray-700': selectedAnswer && option === currentQuestion.correctAnswer,
+                'bg-blue-600': !selectedAnswer,
+              }"
+              class="p-2 rounded text-white transition"
+            >
+              {{ option }}
+            </button>
+          }
+        </div>
+      }
     </div>
   }
 
