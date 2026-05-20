@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { OnInit, Component } from '@angular/core';
 import { QuizService } from '../services/quiz.service';
 import { Question } from '../models/question.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-quiz',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './quiz.html',
   styleUrls: ['./quiz.css'],
 })
@@ -15,22 +16,18 @@ export class Quiz implements OnInit {
 
   questions: Question[] = [];
   currentQuestionIndex = 0;
+  selectedCategory: string = '';
+  selectedDifficulty: string = '';
   score = 0;
   selectedAnswer: string | null = null;
   result: string | null = null;
   showNext = false;
   finished = false;
+  noQuestionsFound = false;
   timeLeft = 10;
   timer: ReturnType<typeof setInterval> | undefined;
 
-  ngOnInit(): void {
-    this.quizService.getQuestions().subscribe((data: any) => {
-      this.questions = [
-        { question: data.question, options: data.options, correctAnswer: data.correctAnswer },
-      ];
-      this.startTimer();
-    });
-  }
+  ngOnInit(): void {}
 
   get currentQuestion() {
     return this.questions[this.currentQuestionIndex];
@@ -84,6 +81,30 @@ export class Quiz implements OnInit {
       this.finished = true;
       this.timeLeft = 0;
     }
+  }
+
+  loadQuestions() {
+    this.quizService
+      .getQuestions(this.selectedCategory, this.selectedDifficulty)
+      .subscribe((data: any) => {
+        clearInterval(this.timer);
+        this.questions = data;
+
+        this.currentQuestionIndex = 0;
+        this.score = 0;
+        this.selectedAnswer = null;
+        this.result = null;
+        this.showNext = false;
+
+        this.finished = false;
+
+        if (this.questions.length === 0) {
+          this.noQuestionsFound = true;
+        } else {
+          this.noQuestionsFound = false;
+          this.startTimer();
+        }
+      });
   }
 
   restart() {

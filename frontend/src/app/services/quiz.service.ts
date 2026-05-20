@@ -9,7 +9,22 @@ export class QuizService {
 
   constructor(private http: HttpClient) {}
 
-  getQuestions() {
-    return this.http.get(this.apiUrl);
+  getQuestions(category?: string, difficulty?: string) {
+    let url = this.apiUrl;
+
+    const params = [];
+
+    if (category) {
+      params.push(`category=${category}`);
+    }
+
+    if (difficulty) {
+      params.push(`difficulty=${difficulty}`);
+    }
+
+    if (params.length > 0) {
+      url += `?${params.join('&')}`;
+    }
+    return this.http.get(url);
   }
 }
