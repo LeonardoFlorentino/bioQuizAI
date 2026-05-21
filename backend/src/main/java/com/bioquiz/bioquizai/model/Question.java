@@ -9,6 +9,9 @@ public class Question {
     private String category;
     private String difficulty;
 
+    public Question() {
+    }
+
     public Question(String question, List<String> options, String correctAnswer) {
         this.question = question;
         this.options = options;

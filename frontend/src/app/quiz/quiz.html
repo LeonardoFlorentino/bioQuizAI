@@ -11,16 +11,23 @@
 
     <select [(ngModel)]="selectedDifficulty" class="p-2 rounded bg-gray-700 text-white">
       <option value="">Todas Dificuldades</option>
-      <option value="Fácil">Fácil</option>
-      <option value="Médio">Média</option>
-      <option value="Difícil">Difícil</option>
+      <option value="easy">Fácil</option>
+      <option value="medium">Média</option>
+      <option value="hard">Difícil</option>
     </select>
 
     <button
       (click)="loadQuestions()"
-      class="bg-purple-600 hover:bg-purple-700 p-2 rounded text-white font-semibold transition"
+      [disabled]="loading"
+      class="flex justify-center items-center bg-purple-600 hover:bg-purple-700 p-2 rounded text-white font-semibold transition w-full cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
     >
-      Iniciar Quiz
+      @if (loading) {
+        <div
+          class="w-5 h-5 border-4 border-white/30 border-t-white rounded-full animate-spin"
+        ></div>
+      } @else {
+        <span>Iniciar Quiz</span>
+      }
     </button>
   </div>
 
@@ -54,7 +61,7 @@
                 'bg-gray-700': selectedAnswer && option === currentQuestion.correctAnswer,
                 'bg-blue-600': !selectedAnswer,
               }"
-              class="p-2 rounded text-white transition"
+              class="p-2 rounded text-white transition cursor-pointer"
             >
               {{ option }}
             </button>
@@ -68,7 +75,10 @@
     <p class="mt-4 text-lg font-semibold">
       {{ result }}
     </p>
-    <button (click)="nextQuestion()" class="mt-4 bg-green-600 p-2 rounded hover:bg-green-700">
+    <button
+      (click)="nextQuestion()"
+      class="mt-4 bg-green-600 p-2 rounded hover:bg-green-700 cursor-pointer"
+    >
       Próxima pergunta
     </button>
   }
@@ -77,6 +87,8 @@
     <h2 class="text-xl mb-4">🎉 Quiz finalizado!</h2>
     <p class="mb-4 text-lg font-semibold">{{ result }}</p>
     <p class="mb-4">Você acertou {{ score }} de {{ questions.length }}</p>
-    <button (click)="restart()" class="bg-blue-600 p-2 rounded hover:bg-blue-700">Reiniciar</button>
+    <button (click)="restart()" class="bg-blue-600 p-2 rounded hover:bg-blue-700 cursor-pointer">
+      Reiniciar
+    </button>
   }
 </div>

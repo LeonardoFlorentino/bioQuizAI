@@ -38,7 +38,19 @@ public class GrokService {
         }
     }
 
+    private String mapDifficulty(String difficulty) {
+        if (difficulty == null)
+            return "";
+        return switch (difficulty.toLowerCase()) {
+            case "fácil", "facil" -> "easy";
+            case "médio", "medio" -> "medium";
+            case "difícil", "dificil" -> "hard";
+            default -> difficulty;
+        };
+    }
+
     public List<Question> generateQuestion(String category, String difficulty) {
+        String mappedDifficulty = mapDifficulty(difficulty);
 
         String body = """
                 {
@@ -46,11 +58,12 @@ public class GrokService {
                   "messages": [
                     {
                       "role": "user",
-                      "content": "Gere uma pergunta de biologia em JSON. Categoria %s. Dificuldade %s."
+                      "content": "Gere uma pergunta de biologia em português, no formato JSON, com os campos: question, options (array de 4 alternativas), correctAnswer, category, difficulty. Exemplo: {\\\"question\\\":\\\"...\\\",\\\"options\\\":[\\\"...\\\",\\\"...\\\",\\\"...\\\",\\\"...\\\"],\\\"correctAnswer\\\":\\\"...\\\",\\\"category\\\":\\\"...\\\",\\\"difficulty\\\":\\\"...\\\"}. Categoria: %s. Dificuldade: %s."
                     }
                   ]
                 }
-                """.formatted(category, difficulty);
+                """
+                .formatted(category, mappedDifficulty);
 
         String response = webClient.post().uri("/chat/completions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)

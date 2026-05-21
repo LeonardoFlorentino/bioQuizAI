@@ -3,7 +3,7 @@ import { OnInit, Component } from '@angular/core';
 import { QuizService } from '../services/quiz.service';
 import { Question } from '../models/question.model';
 import { FormsModule } from '@angular/forms';
-
+import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-quiz',
   standalone: true,
@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class Quiz implements OnInit {
   constructor(private quizService: QuizService) {}
 
+  defaultTime = 60;
   questions: Question[] = [];
   currentQuestionIndex = 0;
   selectedCategory: string = '';
@@ -24,7 +25,8 @@ export class Quiz implements OnInit {
   showNext = false;
   finished = false;
   noQuestionsFound = false;
-  timeLeft = 10;
+  loading = false;
+  timeLeft = this.defaultTime;
   timer: ReturnType<typeof setInterval> | undefined;
 
   ngOnInit(): void {}
@@ -35,7 +37,7 @@ export class Quiz implements OnInit {
 
   startTimer() {
     clearInterval(this.timer);
-    this.timeLeft = 10;
+    this.timeLeft = this.defaultTime;
 
     this.timer = setInterval(() => {
       this.timeLeft--;
@@ -84,8 +86,14 @@ export class Quiz implements OnInit {
   }
 
   loadQuestions() {
+    this.loading = true;
     this.quizService
       .getQuestionsAI(this.selectedCategory, this.selectedDifficulty)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        }),
+      )
       .subscribe((data: any) => {
         clearInterval(this.timer);
         this.questions = data;
