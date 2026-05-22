@@ -29,7 +29,9 @@ export class QuizService {
     return this.http.get(url);
   }
 
-  getQuestionsAI(category: string, difficulty: string): Observable<any> {
-    return this.http.get<any>(`/questions/generate?category=${category}&difficulty=${difficulty}`);
+  getQuestionsAI(category: string, difficulty: string, numQuestions: number): Observable<any> {
+    return this.http.get<any>(
+      `/questions/generate?category=${category}&difficulty=${difficulty}&numberOfQuestions=${numQuestions}`,
+    );
   }
 }

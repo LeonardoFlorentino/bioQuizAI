@@ -3,18 +3,53 @@
 
   <div class="flex flex-col gap-3 mb-6">
     <select [(ngModel)]="selectedCategory" class="p-2 rounded bg-gray-700 text-white">
-      <option value="">Todas Categorias</option>
+      <option value="Todas">Qualquer categoria</option>
       <option value="Citologia">Citologia</option>
       <option value="Genética">Genética</option>
       <option value="Bioquímica">Bioquímica</option>
+      <option value="Ecologia">Ecologia</option>
+      <option value="Zoologia">Zoologia</option>
+      <option value="Botânica">Botânica</option>
+      <option value="Fisiologia Humana">Fisiologia Humana</option>
+      <option value="Microbiologia">Microbiologia</option>
+      <option value="Evolução">Evolução</option>
+      <option value="Parasitologia">Parasitologia</option>
+      <option value="Outra">Outra...</option>
     </select>
 
+    @if (selectedCategory === 'Outra') {
+      <input
+        type="text"
+        [(ngModel)]="customCategory"
+        placeholder="Digite a categoria"
+        class="p-2 rounded bg-gray-700 text-white mt-2 w-full"
+      />
+    }
+
     <select [(ngModel)]="selectedDifficulty" class="p-2 rounded bg-gray-700 text-white">
-      <option value="">Todas Dificuldades</option>
+      <option value="any difficulty">Qualquer dificuldade</option>
       <option value="easy">Fácil</option>
       <option value="medium">Média</option>
       <option value="hard">Difícil</option>
     </select>
+
+    <div class="flex flex-row gap-2 items-center">
+      <label>Número de perguntas:</label>
+      <select [(ngModel)]="numQuestions" class="p-2 rounded bg-gray-700 text-white">
+        <option *ngFor="let n of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="n">{{ n }}</option>
+      </select>
+
+      <label class="text-white ml-4"> Tempo por pergunta (s):</label>
+      <input
+        id="questionTime"
+        type="text"
+        min="5"
+        max="300"
+        [ngModel]="defaultTime"
+        class="p-2 rounded bg-gray-700 text-white w-20"
+        placeholder="60"
+      />
+    </div>
 
     <button
       (click)="loadQuestions()"
@@ -50,7 +85,7 @@
         </p>
 
         <div class="flex flex-col gap-2">
-          @for (option of currentQuestion.options; track option) {
+          @for (option of currentQuestion.options; track $index) {
             <button
               (click)="selectAnswer(option)"
               [disabled]="selectedAnswer !== null"
@@ -75,18 +110,19 @@
     <p class="mt-4 text-lg font-semibold">
       {{ result }}
     </p>
-    <button
-      (click)="nextQuestion()"
-      class="mt-4 bg-green-600 p-2 rounded hover:bg-green-700 cursor-pointer"
-    >
-      Próxima pergunta
-    </button>
+    @if (currentQuestionIndex + 1 < questions.length) {
+      <button
+        (click)="nextQuestion()"
+        class="mt-4 bg-green-600 p-2 rounded hover:bg-green-700 cursor-pointer"
+      >
+        Próxima pergunta
+      </button>
+    }
   }
 
   @if (finished) {
     <h2 class="text-xl mb-4">🎉 Quiz finalizado!</h2>
     <p class="mb-4 text-lg font-semibold">{{ result }}</p>
-    <p class="mb-4">Você acertou {{ score }} de {{ questions.length }}</p>
     <button (click)="restart()" class="bg-blue-600 p-2 rounded hover:bg-blue-700 cursor-pointer">
       Reiniciar
     </button>

@@ -15,10 +15,12 @@ export class Quiz implements OnInit {
   constructor(private quizService: QuizService) {}
 
   defaultTime = 60;
+  numQuestions = 5;
   questions: Question[] = [];
   currentQuestionIndex = 0;
-  selectedCategory: string = '';
-  selectedDifficulty: string = '';
+  selectedCategory: string = 'Todas';
+  customCategory: string = '';
+  selectedDifficulty: string = 'any difficulty';
   score = 0;
   selectedAnswer: string | null = null;
   result: string | null = null;
@@ -68,6 +70,20 @@ export class Quiz implements OnInit {
     }
 
     this.showNext = true;
+
+    if (this.currentQuestionIndex + 2 > this.questions.length) {
+      this.finished = true;
+      this.timeLeft = 0;
+      // Define resultado final
+      const acertos = this.score;
+      const total = this.questions.length;
+      const percentual = total > 0 ? acertos / total : 0;
+      if (percentual >= 0.7) {
+        this.result = `🎉 Parabéns! Você acertou ${acertos} de ${total} perguntas!`;
+      } else {
+        this.result = `😢 Você acertou ${acertos} de ${total} perguntas. Tente novamente!`;
+      }
+    }
   }
 
   nextQuestion() {
@@ -79,39 +95,45 @@ export class Quiz implements OnInit {
     if (this.currentQuestionIndex + 1 < this.questions.length) {
       this.currentQuestionIndex++;
       this.startTimer();
-    } else {
-      this.finished = true;
-      this.timeLeft = 0;
     }
   }
 
   loadQuestions() {
     this.loading = true;
+    const categoryToSend =
+      this.selectedCategory === 'Outra' ? this.customCategory : this.selectedCategory;
     this.quizService
-      .getQuestionsAI(this.selectedCategory, this.selectedDifficulty)
+      .getQuestionsAI(categoryToSend, this.selectedDifficulty, this.numQuestions)
       .pipe(
         finalize(() => {
           this.loading = false;
         }),
       )
-      .subscribe((data: any) => {
-        clearInterval(this.timer);
-        this.questions = data;
+      .subscribe({
+        next: (data: any) => {
+          clearInterval(this.timer);
+          this.questions = data;
 
-        this.currentQuestionIndex = 0;
-        this.score = 0;
-        this.selectedAnswer = null;
-        this.result = null;
-        this.showNext = false;
+          this.currentQuestionIndex = 0;
+          this.score = 0;
+          this.selectedAnswer = null;
+          this.result = null;
+          this.showNext = false;
 
-        this.finished = false;
+          this.finished = false;
 
-        if (this.questions.length === 0) {
+          if (this.questions.length === 0) {
+            this.noQuestionsFound = true;
+          } else {
+            this.noQuestionsFound = false;
+            this.startTimer();
+          }
+        },
+        error: (err) => {
+          console.error('Erro ao carregar perguntas:', err);
+          this.questions = [];
           this.noQuestionsFound = true;
-        } else {
-          this.noQuestionsFound = false;
-          this.startTimer();
-        }
+        },
       });
   }
 

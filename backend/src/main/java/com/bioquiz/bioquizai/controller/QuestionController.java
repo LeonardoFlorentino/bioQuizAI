@@ -41,9 +41,10 @@ public class QuestionController {
         @GetMapping("/generate")
         public ResponseEntity<List<Question>> generateQuestion(
                         @RequestParam String category,
-                        @RequestParam String difficulty) {
+                        @RequestParam String difficulty,
+                        @RequestParam int numberOfQuestions) {
 
-                List<Question> questions = grokService.generateQuestion(category, difficulty);
+                List<Question> questions = grokService.generateQuestion(category, difficulty, numberOfQuestions);
                 return ResponseEntity.ok(questions);
         }
 }
