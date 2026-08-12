@@ -3,7 +3,7 @@
 
   <div class="flex flex-col gap-3 mb-6">
     <select [(ngModel)]="selectedCategory" class="p-2 rounded bg-gray-700 text-white">
-      <option value="Todas">Qualquer categoria</option>
+      <option value="">Qualquer categoria</option>
       <option value="Citologia">Citologia</option>
       <option value="Genética">Genética</option>
       <option value="Bioquímica">Bioquímica</option>
@@ -27,10 +27,10 @@
     }
 
     <select [(ngModel)]="selectedDifficulty" class="p-2 rounded bg-gray-700 text-white">
-      <option value="any difficulty">Qualquer dificuldade</option>
-      <option value="easy">Fácil</option>
-      <option value="medium">Média</option>
-      <option value="hard">Difícil</option>
+      <option value="">Qualquer dificuldade</option>
+      <option value="fácil">Fácil</option>
+      <option value="mediana">Média</option>
+      <option value="difícil">Difícil</option>
     </select>
 
     <div class="flex flex-row gap-2 items-center">
@@ -76,7 +76,7 @@
     <p class="text-red-400 mt-4">Nenhuma pergunta encontrada para o filtro selecionado.</p>
   }
 
-  @if (!finished && !noQuestionsFound) {
+  @if (!finished && !noQuestionsFound && !errorMessage && questions.length !== 0) {
     <p class="text-sm text-yellow-400 mb-2">⏱️ Tempo restante: {{ timeLeft }}s</p>
   }
 

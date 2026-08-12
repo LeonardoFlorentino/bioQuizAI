@@ -43,13 +43,28 @@ public class GrokService {
     public List<Question> generateQuestion(String category, String difficulty, int numberOfQuestions) {
 
         // Monta o JSON manualmente para evitar problemas de escape
+
+        String bodyContent = "Gere " + numberOfQuestions + " perguntas de biologia";
+
+        if (category != null && !category.isBlank()) {
+            bodyContent += ", específicas sobre o tema de " + category;
+        }
+
+        if (difficulty != null && !difficulty.isBlank()) {
+            bodyContent += ", com dificuldade " + difficulty;
+        }
+
+        bodyContent += ", em português, no formato JSON array, "
+                + "com os campos: question, options (4 alternativas), "
+                + "correctAnswer, category, difficulty. "
+                + "Apenas o array JSON, sem explicações.";
+
         String body = "{"
                 + "\"model\": \"groq/compound\","
                 + "\"messages\": ["
                 + "{"
                 + "\"role\": \"user\","
-                + "\"content\": \"Gere " + numberOfQuestions
-                + " perguntas de biologia em português, no formato JSON array, com os campos: question, options (4 alternativas), correctAnswer, category, difficulty. Apenas o array JSON, sem explicações.\""
+                + "\"content\": \"" + bodyContent + "\""
                 + "}"
                 + "]"
                 + "}";

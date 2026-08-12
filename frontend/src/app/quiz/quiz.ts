@@ -19,9 +19,9 @@ export class Quiz implements OnInit {
   numQuestions = 5;
   questions: Question[] = [];
   currentQuestionIndex = 0;
-  selectedCategory: string = 'Todas';
+  selectedCategory: string = '';
   customCategory: string = '';
-  selectedDifficulty: string = 'any difficulty';
+  selectedDifficulty: string = '';
   score = 0;
   selectedAnswer: string | null = null;
   result: string | null = null;
