@@ -64,8 +64,8 @@
         <span>Iniciar Quiz</span>
       }
     </button>
-      @if (errorMessage) {
-        <div class="mt-4 rounded-lg border border-red-600 bg-red-900/30 p-4 text-red-300">
+    @if (errorMessage) {
+      <div class="mt-4 rounded-lg border border-red-600 bg-red-900/30 p-4 text-red-300">
         <p class="font-semibold">{{ errorTitle }}</p>
         <p class="text-sm mt-1">{{ errorMessage }}</p>
       </div>
@@ -129,8 +129,17 @@
   @if (finished) {
     <h2 class="text-xl mb-4">🎉 Quiz finalizado!</h2>
     <p class="mb-4 text-lg font-semibold">{{ result }}</p>
-    <button (click)="restart()" class="bg-blue-600 p-2 rounded hover:bg-blue-700 cursor-pointer">
-      Reiniciar
+    <button
+      (click)="restart()"
+      class="bg-blue-600 m-2 p-2 rounded hover:bg-blue-700 cursor-pointer"
+    >
+      🔄 Repetir perguntas
+    </button>
+    <button
+      (click)="loadQuestions()"
+      class="bg-blue-600 m-2 p-2 rounded hover:bg-blue-700 cursor-pointer"
+    >
+      ✨ Novas perguntas
     </button>
   }
 </div>
