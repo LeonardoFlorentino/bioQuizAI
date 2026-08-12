@@ -15,6 +15,8 @@ import com.bioquiz.bioquizai.model.Question;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.bioquiz.bioquizai.exception.AiUnavailableException;
+
 @Service
 public class GrokService {
 
@@ -38,19 +40,7 @@ public class GrokService {
         }
     }
 
-    private String mapDifficulty(String difficulty) {
-        if (difficulty == null)
-            return "";
-        return switch (difficulty.toLowerCase()) {
-            case "fácil", "facil" -> "easy";
-            case "médio", "medio" -> "medium";
-            case "difícil", "dificil" -> "hard";
-            default -> difficulty;
-        };
-    }
-
     public List<Question> generateQuestion(String category, String difficulty, int numberOfQuestions) {
-        String mappedDifficulty = mapDifficulty(difficulty);
 
         // Monta o JSON manualmente para evitar problemas de escape
         String body = "{"
@@ -78,7 +68,7 @@ public class GrokService {
 
             JsonNode contentNode = root.path("choices").get(0).path("message").path("content");
             if (contentNode.isMissingNode() || contentNode.isNull()) {
-                return fallbackQuestions(category, mappedDifficulty);
+                throw new AiUnavailableException("A resposta da IA não contém o conteúdo esperado");
             }
             String content = contentNode.asText();
 
@@ -100,26 +90,15 @@ public class GrokService {
                     Collections.addAll(questionList, questions);
                     return questionList;
                 } catch (Exception parseEx) {
-                    return fallbackQuestions(category, mappedDifficulty);
+                    throw new AiUnavailableException("Não foi possível interpretar a resposta retornada pela IA.",
+                            parseEx);
                 }
             } else {
-                return fallbackQuestions(category, mappedDifficulty);
+                throw new AiUnavailableException("A IA não retornou um JSON válido.");
             }
         } catch (Exception e) {
-            return fallbackQuestions(category, mappedDifficulty);
+            throw new AiUnavailableException("Erro ao comunicar com a IA.", e);
         }
-    }
-
-    // Pergunta de fallback para evitar erro no frontend
-    private List<Question> fallbackQuestions(String category, String difficulty) {
-        List<Question> fallback = new ArrayList<>();
-        fallback.add(new Question(
-                "Pergunta de exemplo: Qual é a organela responsável pela respiração celular?",
-                List.of("Ribossomo", "Mitocôndria", "Lisossomo", "Núcleo"),
-                "Mitocôndria",
-                category != null ? category : "Citologia",
-                difficulty != null ? difficulty : "Fácil"));
-        return fallback;
     }
 
 }

@@ -64,6 +64,12 @@
         <span>Iniciar Quiz</span>
       }
     </button>
+      @if (errorMessage) {
+        <div class="mt-4 rounded-lg border border-red-600 bg-red-900/30 p-4 text-red-300">
+        <p class="font-semibold">{{ errorTitle }}</p>
+        <p class="text-sm mt-1">{{ errorMessage }}</p>
+      </div>
+    }
   </div>
 
   @if (noQuestionsFound) {

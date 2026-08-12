@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { OnInit, Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { QuizService } from '../services/quiz.service';
 import { Question } from '../models/question.model';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +31,8 @@ export class Quiz implements OnInit {
   loading = false;
   timeLeft = this.defaultTime;
   timer: ReturnType<typeof setInterval> | undefined;
+  errorMessage: string | null = null;
+  errorTitle: string | null = null;
 
   ngOnInit(): void {}
 
@@ -100,6 +103,8 @@ export class Quiz implements OnInit {
 
   loadQuestions() {
     this.loading = true;
+    this.errorMessage = null;
+    this.errorTitle = null;
     const categoryToSend =
       this.selectedCategory === 'Outra' ? this.customCategory : this.selectedCategory;
     this.quizService
@@ -129,10 +134,17 @@ export class Quiz implements OnInit {
             this.startTimer();
           }
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           console.error('Erro ao carregar perguntas:', err);
           this.questions = [];
-          this.noQuestionsFound = true;
+          this.noQuestionsFound = false;
+          const aiUnavailable = err.status === 503;
+          this.errorTitle = aiUnavailable
+            ? 'Não foi possível carregar os dados com a IA'
+            : 'Erro ao carregar perguntas';
+          this.errorMessage = aiUnavailable
+            ? 'A IA está indisponível no momento. Tente novamente em alguns instantes.'
+            : 'Não foi possível carregar as perguntas. Verifique sua conexão ou tente novamente em alguns instantes.';
         },
       });
   }
